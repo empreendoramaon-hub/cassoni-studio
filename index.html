@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cassoni Studio cria identidades, campanhas, social media e sites com estrategia, design e tecnologia."
+    />
+    <meta property="og:title" content="Cassoni Studio" />
+    <meta
+      property="og:description"
+      content="Design, campanhas e sites para marcas que precisam sair do briefing para a rua."
+    />
+    <meta property="og:type" content="website" />
+    <title>Cassoni Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Black&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const directFile = window.location.protocol === "file:";
+      const alreadyBuilt = window.location.pathname.replaceAll("\\", "/").endsWith("/dist/index.html");
+      if (directFile && !alreadyBuilt) {
+        window.location.replace("./dist/index.html");
+      }
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
