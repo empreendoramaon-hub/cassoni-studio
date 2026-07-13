@@ -1,14 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import {
-  ArrowUpRight,
-  BadgeCheck,
-  ChevronDown,
-  Mail,
-  Menu,
-  Send,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, BadgeCheck, ChevronDown, Mail, Menu, Send, X } from "lucide-react";
 import { hasFirebaseConfig, saveLead } from "./firebase";
 import "./styles.css";
 
@@ -19,7 +11,6 @@ const works = [
     year: "2024",
     image: "/work/anuncios-01.webp",
     gallery: ["/work/anuncios-01.webp", "/work/anuncios-02.webp"],
-    url: "https://www.behance.net/gallery/202859701/Anuncios-Para-Campanhas-Publicitarias",
     note: "Peças de impacto para campanha, redes sociais e mídia impressa.",
   },
   {
@@ -32,7 +23,6 @@ const works = [
       "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200_webp/c8894b172168939.647a4ea78cc7c.png",
       "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200_webp/f8c2f2172168939.647a4ea78dba7.png",
     ],
-    url: "https://www.behance.net/gallery/172168939/Coca-Cola-Coffee",
     note: "Conceito de campanha para produto com aplicações digitais e externas.",
   },
   {
@@ -41,7 +31,6 @@ const works = [
     year: "2023",
     image: "/work/entrepreneurama.webp",
     gallery: ["/work/entrepreneurama.webp"],
-    url: "https://www.behance.net/gallery/172169517/Entrepreneurama-Logo",
     note: "Sistema visual com presença, contraste e leitura imediata.",
   },
 ];
@@ -134,8 +123,8 @@ const faqs = [
     a: "Você escolhe um pacote ou envia um briefing pelo formulário de contato e o trabalho começa em poucos dias.",
   },
   {
-    q: "Os trabalhos do Behance são usados no site?",
-    a: "Sim. A seção de portfólio usa os trabalhos públicos do perfil Gabriel Cassoni no Behance como cases reais e mantém o link para cada projeto.",
+    q: "Como é a entrega dos projetos?",
+    a: "Cada projeto é acompanhado de perto, com revisões organizadas e arquivos prontos para publicar em cada canal.",
   },
   {
     q: "O site já fica pronto para publicar?",
@@ -178,12 +167,14 @@ function Header() {
           </a>
         ))}
       </nav>
-      <a className="header-cta" href="#contato">
-        Orçar
-      </a>
-      <button className="icon-button menu-toggle" type="button" onClick={() => setOpen((value) => !value)} aria-label="Abrir menu">
-        {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
-      </button>
+      <div className="header-right">
+        <a className="header-cta" href="#contato">
+          Orçar
+        </a>
+        <button className="icon-button menu-toggle" type="button" onClick={() => setOpen((value) => !value)} aria-label="Abrir menu">
+          {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+        </button>
+      </div>
     </header>
   );
 }
@@ -251,7 +242,7 @@ function ValueSection() {
 
 function ServicesSection() {
   return (
-    <section className="section-band services-section" id="servicos">
+    <section className="section-band services-section is-dark-bg" id="servicos">
       <SectionTop label="● Criativo sob medida" index="02" />
       <div className="service-layout">
         <div>
@@ -289,13 +280,13 @@ function WorkSection() {
       <SectionTop label="● Projetos selecionados" index="03" />
       <div className="section-heading">
         <h2>Portfólio com peças de marca, campanha e presença digital.</h2>
-        <p>Cases públicos do Behance de Gabriel Cassoni, organizados como vitrine da Cassoni Studio.</p>
+        <p>Cases da Cassoni Studio em marca, campanha e presença digital.</p>
       </div>
       <div className="work-list">
         {works.map((work, index) => (
           <article className="work-item" key={work.title}>
-            <button className="work-media" type="button" onClick={() => setSelectedWork(work)} aria-label={`Visualizar ${work.title} no site`}>
-              <img src={work.image} alt={work.title} loading="lazy" />
+            <button className="work-media" type="button" onClick={() => setSelectedWork(work)} aria-label={`Visualizar ${work.title}`}>
+              <img src={work.image} alt={work.title} loading="lazy" data-parallax="0.08" />
               <span className="view-label">Ver case</span>
             </button>
             <div className="work-copy">
@@ -305,9 +296,6 @@ function WorkSection() {
               <div className="work-meta">
                 <span>{work.type}</span>
                 <span>{work.year}</span>
-                <a href={work.url} target="_blank" rel="noreferrer">
-                  Behance <ArrowUpRight size={13} aria-hidden="true" />
-                </a>
               </div>
             </div>
           </article>
@@ -320,8 +308,8 @@ function WorkSection() {
 
 function WorkModal({ work, onClose }) {
   return (
-    <div className="work-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="work-modal-title">
-      <div className="work-modal">
+    <div className="work-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="work-modal-title" onClick={onClose}>
+      <div className="work-modal" onClick={(event) => event.stopPropagation()}>
         <button className="icon-button modal-close" type="button" onClick={onClose} aria-label="Fechar">
           <X size={20} aria-hidden="true" />
         </button>
@@ -334,8 +322,8 @@ function WorkModal({ work, onClose }) {
           <span>{work.year} / {work.type}</span>
           <h2 id="work-modal-title">{work.title}</h2>
           <p>{work.note}</p>
-          <a className="secondary-link" href={work.url} target="_blank" rel="noreferrer">
-            Ver no Behance <ArrowUpRight size={16} aria-hidden="true" />
+          <a className="secondary-link" href="#contato" onClick={onClose}>
+            Quero algo assim <ArrowUpRight size={16} aria-hidden="true" />
           </a>
         </div>
       </div>
@@ -343,18 +331,32 @@ function WorkModal({ work, onClose }) {
   );
 }
 
-function ImageLoop() {
-  const strip = [...loopImages, ...loopImages, ...loopImages];
-  return (
-    <div className="image-loop" aria-hidden="true">
-      <div className="image-loop-track">
-        {strip.map((src, index) => (
-          <div className="image-loop-cell" key={`${src}-${index}`}>
-            <img src={src} alt="" loading="lazy" />
-          </div>
-        ))}
+function CriativoMarquee() {
+  const unit = loopImages.map((img, index) => (
+    <React.Fragment key={index}>
+      <span className="criativo-word">Criativo</span>
+      <div className="criativo-cell">
+        <img src={img} alt="" loading="lazy" />
       </div>
-    </div>
+    </React.Fragment>
+  ));
+
+  return (
+    <section className="criativo-section" aria-hidden="true">
+      <div className="criativo-track">
+        <div className="criativo-group">{unit}</div>
+        <div className="criativo-group">
+          {loopImages.map((img, index) => (
+            <React.Fragment key={`b-${index}`}>
+              <span className="criativo-word">Criativo</span>
+              <div className="criativo-cell">
+                <img src={img} alt="" loading="lazy" />
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -523,80 +525,31 @@ function ContactSection() {
 
 function CookieConsent() {
   const [visible, setVisible] = useState(false);
-  const [modal, setModal] = useState(null);
 
   useEffect(() => {
-    setVisible(localStorage.getItem("cassoni-cookie-consent") !== "set");
+    setVisible(localStorage.getItem("cassoni-cookie-consent") !== "accepted");
   }, []);
 
-  function choose(value) {
-    localStorage.setItem("cassoni-cookie-consent", value);
+  function accept() {
+    localStorage.setItem("cassoni-cookie-consent", "accepted");
     setVisible(false);
   }
 
-  const modalText = useMemo(() => {
-    const content = {
-      privacy: {
-        title: "Política de Privacidade",
-        text: "Coletamos apenas dados enviados no formulário de contato e dados essenciais para funcionamento do site. Ferramentas de análise ou mídia paga devem ser ativadas somente com consentimento adequado.",
-      },
-      terms: {
-        title: "Termos de uso",
-        text: "O conteúdo deste site apresenta serviços, portfólio e canais de contato da Cassoni Studio. Orçamentos, prazos e escopos são definidos em proposta comercial individual.",
-      },
-      optout: {
-        title: "Opt-out",
-        text: "Você pode rejeitar cookies não essenciais neste aviso. Para apagar dados enviados pelo formulário, solicite remoção pelo e-mail de contato.",
-      },
-    };
-    return modal ? content[modal] : null;
-  }, [modal]);
-
-  if (!visible && !modal) return null;
+  if (!visible) return null;
 
   return (
-    <>
-      {visible && (
-        <div className="cookie-alert" role="dialog" aria-labelledby="cookie-title" aria-modal="false">
-          <div>
-            <h2 id="cookie-title">Controle sua privacidade</h2>
-            <p>
-              Nosso site usa cookies essenciais para funcionar e pode usar cookies de análise para melhorar a navegação. Você pode aceitar todos, rejeitar os não essenciais ou customizar suas preferências.
-            </p>
-            <div className="cookie-links">
-              <button type="button" onClick={() => setModal("privacy")}>Política de Privacidade</button>
-              <button type="button" onClick={() => setModal("terms")}>Termos de uso</button>
-              <button type="button" onClick={() => setModal("optout")}>Opt-out</button>
-            </div>
-          </div>
-          <div className="cookie-actions">
-            <button type="button" onClick={() => setModal("privacy")}>Customizar</button>
-            <button type="button" onClick={() => choose("rejected")}>Rejeitar</button>
-            <button type="button" onClick={() => choose("accepted")}>Aceitar</button>
-          </div>
-        </div>
-      )}
-      {modalText && (
-        <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-          <div className="legal-modal">
-            <button className="icon-button modal-close" type="button" onClick={() => setModal(null)} aria-label="Fechar">
-              <X size={20} aria-hidden="true" />
-            </button>
-            <h2 id="modal-title">{modalText.title}</h2>
-            <p>{modalText.text}</p>
-            <button className="submit-button" type="button" onClick={() => choose("customized")}>
-              Salvar preferência
-            </button>
-          </div>
-        </div>
-      )}
-    </>
+    <div className="cookie-pill" role="dialog" aria-label="Aviso de cookies">
+      <p>Este site usa cookies</p>
+      <button type="button" className="cookie-accept" onClick={accept}>
+        Aceitar
+      </button>
+    </div>
   );
 }
 
 function Footer() {
   return (
-    <footer className="footer">
+    <footer className="footer is-dark-bg">
       <div>Cassoni Studio®</div>
       <a href="#top">Voltar ao topo ↑</a>
       <span>© 2026</span>
@@ -612,34 +565,82 @@ function slug(value) {
 
 function App() {
   useEffect(() => {
-    const animated = document.querySelectorAll(
-      ".section-top, .section-heading, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-copy, .contact-form"
-    );
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // Scroll reveal
+    const animated = document.querySelectorAll(
+      ".section-top, .section-heading, .benefits-head, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-copy, .contact-form"
+    );
     animated.forEach((element, index) => {
       element.dataset.animate = "reveal";
-      element.style.setProperty("--reveal-delay", `${Math.min(index * 45, 360)}ms`);
+      element.style.setProperty("--reveal-delay", `${Math.min(index * 50, 420)}ms`);
     });
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let revealObserver;
+    if (reduce) {
       animated.forEach((element) => element.classList.add("is-visible"));
-      return undefined;
+    } else {
+      revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.14 }
+      );
+      animated.forEach((element) => revealObserver.observe(element));
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.16 }
-    );
+    // Header theme over dark sections
+    const header = document.querySelector(".site-header");
+    const darkSections = Array.from(document.querySelectorAll(".is-dark-bg"));
+    const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
 
-    animated.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const line = 34;
+      let dark = false;
+      for (const section of darkSections) {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= line && rect.bottom >= line) {
+          dark = true;
+          break;
+        }
+      }
+      if (header) header.classList.toggle("dark", dark);
+
+      if (!reduce) {
+        const vh = window.innerHeight;
+        for (const element of parallaxEls) {
+          const speed = parseFloat(element.dataset.parallax) || 0.1;
+          const rect = element.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          const offset = (center - vh / 2) * speed;
+          element.style.setProperty("--py", `${(-offset).toFixed(1)}px`);
+        }
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      if (revealObserver) revealObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (
@@ -650,7 +651,7 @@ function App() {
         <ValueSection />
         <ServicesSection />
         <WorkSection />
-        <ImageLoop />
+        <CriativoMarquee />
         <BenefitsSection />
         <PlansSection />
         <FaqSection />
