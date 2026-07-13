@@ -183,18 +183,17 @@ function Hero() {
   return (
     <>
       <section className="hero section-band" id="top">
-        <p className="hero-eyebrow">● Estúdio criativo full-service</p>
-        <h1 className="hero-headline">
-          Criativo premium a preços enxutos para marcas em crescimento. Empacotado como assinatura ou projetos fechados.
-        </h1>
-        <div className="hero-bottom">
+        <div className="hero-intro">
           <p className="hero-note">
             Escolha um pacote, envie o briefing e o projeto começa em poucos dias.
           </p>
-          <a className="primary-link" href="#pacotes">
+          <a className="hero-plans" href="#pacotes">
             Ver pacotes <ArrowUpRight size={16} aria-hidden="true" />
           </a>
         </div>
+        <h1 className="hero-headline">
+          Criativo premium a preços enxutos para marcas em crescimento. Empacotado como assinatura ou projetos fechados.
+        </h1>
       </section>
       <div className="hero-marquee" aria-hidden="true">
         <div className="hero-marquee-track">
