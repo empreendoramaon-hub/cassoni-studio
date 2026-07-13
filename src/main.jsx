@@ -135,6 +135,37 @@ const faqs = [
   },
 ];
 
+const feedPosts = [
+  {
+    category: "Branding",
+    date: "Jun 2024",
+    title: "Como uma identidade forte muda a percepção da sua marca",
+    excerpt: "O que separa uma marca lembrada de uma esquecida — e como construir presença desde o primeiro contato.",
+    color: "#c1a07d",
+  },
+  {
+    category: "Campanha",
+    date: "Mai 2024",
+    title: "Anatomia de uma campanha que para o scroll",
+    excerpt: "Os elementos visuais e de mensagem que fazem alguém parar, olhar e agir.",
+    color: "#14140f",
+  },
+  {
+    category: "Design",
+    date: "Abr 2024",
+    title: "Tipografia com atitude: escolhendo a fonte certa",
+    excerpt: "Como a escolha tipográfica define o tom da marca antes mesmo da primeira palavra ser lida.",
+    color: "#c8331f",
+  },
+  {
+    category: "Estúdio",
+    date: "Mar 2024",
+    title: "Por dentro do processo criativo da Cassoni Studio",
+    excerpt: "Do briefing à entrega: como transformamos ideias soltas em sistemas visuais consistentes.",
+    color: "#5c584d",
+  },
+];
+
 const loopImages = [
   "/work/anuncios-01.webp",
   "/work/entrepreneurama.webp",
@@ -143,6 +174,17 @@ const loopImages = [
 
 function openContact() {
   window.dispatchEvent(new CustomEvent("open-contact"));
+}
+
+function navigateTo(to) {
+  const current = window.location.pathname.replace(/\/$/, "") || "/";
+  if (to === current) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+  window.history.pushState({}, "", to);
+  window.dispatchEvent(new CustomEvent("route-change"));
+  window.scrollTo({ top: 0 });
 }
 
 function SectionTop({ label, index }) {
@@ -154,38 +196,43 @@ function SectionTop({ label, index }) {
   );
 }
 
-function Header() {
+function Header({ path }) {
   const [open, setOpen] = useState(false);
-  const nav = ["Trabalhos", "Serviços", "Pacotes", "Contato"];
+  const current = path.replace(/\/$/, "") || "/";
+  const nav = [
+    { label: "Início", to: "/" },
+    { label: "Trabalhos", to: "/work" },
+    { label: "Feed", to: "/feed" },
+  ];
 
   return (
     <header className="site-header">
-      <a className="brand-mark" href="#top" aria-label="Cassoni Studio">
+      <a
+        className="brand-mark"
+        href="/"
+        aria-label="Cassoni Studio"
+        onClick={(event) => {
+          event.preventDefault();
+          navigateTo("/");
+        }}
+      >
         Cassoni Studio<span>®</span>
       </a>
       <nav className={open ? "nav-links open" : "nav-links"} aria-label="Navegação principal">
-        {nav.map((item) => {
-          if (item === "Contato") {
-            return (
-              <a
-                key={item}
-                href="#contato"
-                onClick={(event) => {
-                  event.preventDefault();
-                  setOpen(false);
-                  openContact();
-                }}
-              >
-                {item}
-              </a>
-            );
-          }
-          return (
-            <a key={item} href={`#${slug(item)}`} onClick={() => setOpen(false)}>
-              {item}
-            </a>
-          );
-        })}
+        {nav.map((item) => (
+          <a
+            key={item.to}
+            href={item.to}
+            className={current === item.to ? "current" : ""}
+            onClick={(event) => {
+              event.preventDefault();
+              setOpen(false);
+              navigateTo(item.to);
+            }}
+          >
+            {item.label}
+          </a>
+        ))}
       </nav>
       <div className="header-right">
         <a
@@ -298,6 +345,30 @@ function ServicesSection() {
   );
 }
 
+function WorkList({ onSelect }) {
+  return (
+    <div className="work-list">
+      {works.map((work, index) => (
+        <article className="work-item" key={work.title}>
+          <button className="work-media" type="button" onClick={() => onSelect(work)} aria-label={`Visualizar ${work.title}`}>
+            <img src={work.image} alt={work.title} loading="lazy" data-anim="1" data-py="0.07" data-px="0.03" data-zoom="0.12" />
+            <span className="view-label">Ver case</span>
+          </button>
+          <div className="work-copy">
+            <span className="work-index">{String(index + 1).padStart(2, "0")}</span>
+            <h3>{work.title}</h3>
+            <p>{work.note}</p>
+            <div className="work-meta">
+              <span>{work.type}</span>
+              <span>{work.year}</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function WorkSection() {
   const [selectedWork, setSelectedWork] = useState(null);
 
@@ -308,25 +379,7 @@ function WorkSection() {
         <h2>Portfólio com peças de marca, campanha e presença digital.</h2>
         <p>Cases da Cassoni Studio em marca, campanha e presença digital.</p>
       </div>
-      <div className="work-list">
-        {works.map((work, index) => (
-          <article className="work-item" key={work.title}>
-            <button className="work-media" type="button" onClick={() => setSelectedWork(work)} aria-label={`Visualizar ${work.title}`}>
-              <img src={work.image} alt={work.title} loading="lazy" data-anim="1" data-py="0.07" data-px="0.03" data-zoom="0.12" />
-              <span className="view-label">Ver case</span>
-            </button>
-            <div className="work-copy">
-              <span className="work-index">{String(index + 1).padStart(2, "0")}</span>
-              <h3>{work.title}</h3>
-              <p>{work.note}</p>
-              <div className="work-meta">
-                <span>{work.type}</span>
-                <span>{work.year}</span>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+      <WorkList onSelect={setSelectedWork} />
       {selectedWork && <WorkModal work={selectedWork} onClose={() => setSelectedWork(null)} />}
     </section>
   );
@@ -364,11 +417,11 @@ function WorkModal({ work, onClose }) {
   );
 }
 
-function CriativoMarquee() {
+function CriativoMarquee({ word = "Criativo" }) {
   const buildGroup = (prefix) =>
     loopImages.map((img, index) => (
       <React.Fragment key={`${prefix}-${index}`}>
-        <span className="criativo-word">Criativo</span>
+        <span className="criativo-word">{word}</span>
         <div className="criativo-cell">
           <img src={img} alt="" loading="lazy" data-anim="1" data-zoom="0.16" />
         </div>
@@ -525,7 +578,16 @@ function Footer() {
   return (
     <footer className="footer is-dark-bg">
       <div>Cassoni Studio®</div>
-      <a href="#top">Voltar ao topo ↑</a>
+      <a
+        href="/"
+        onClick={(event) => {
+          event.preventDefault();
+          navigateTo("/");
+          window.scrollTo({ top: 0 });
+        }}
+      >
+        Voltar ao topo ↑
+      </a>
       <span>© 2026</span>
     </footer>
   );
@@ -537,12 +599,80 @@ function slug(value) {
   return value.toLowerCase().normalize("NFD").replace(DIACRITICS_RE, "");
 }
 
-function App() {
+function HomePage() {
+  return (
+    <main>
+      <Hero />
+      <ValueSection />
+      <ServicesSection />
+      <WorkSection />
+      <CriativoMarquee word="Criativo" />
+      <BenefitsSection />
+      <PlansSection />
+      <FaqSection />
+      <ContactSection />
+    </main>
+  );
+}
+
+function WorkPage() {
+  const [selectedWork, setSelectedWork] = useState(null);
+
+  return (
+    <main>
+      <section className="section-band page-hero">
+        <SectionTop label="● Trabalhos" index="01" />
+        <h1 className="page-title">
+          Design que para o scroll, campanhas memoráveis e presença digital sob medida. A prova está nos projetos.
+        </h1>
+      </section>
+      <CriativoMarquee word="Trabalhos" />
+      <section className="section-band work-section">
+        <div className="section-heading">
+          <h2>Cases selecionados da Cassoni Studio.</h2>
+          <p>Marca, campanha e presença digital com acabamento consistente.</p>
+        </div>
+        <WorkList onSelect={setSelectedWork} />
+      </section>
+      <ContactSection />
+      {selectedWork && <WorkModal work={selectedWork} onClose={() => setSelectedWork(null)} />}
+    </main>
+  );
+}
+
+function FeedPage() {
+  return (
+    <main>
+      <section className="section-band page-hero">
+        <SectionTop label="● Feed" index="01" />
+        <h1 className="page-title">
+          Ideias, bastidores e novidades da Cassoni Studio.
+        </h1>
+      </section>
+      <section className="section-band feed-section">
+        <div className="feed-grid">
+          {feedPosts.map((post) => (
+            <article className="feed-card" key={post.title}>
+              <div className="feed-thumb" style={{ background: post.color }} data-anim="1" data-zoom="0.1" />
+              <span className="feed-cat">{post.category}</span>
+              <h3>{post.title}</h3>
+              <p>{post.excerpt}</p>
+              <span className="feed-date">{post.date}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+      <ContactSection />
+    </main>
+  );
+}
+
+function useScrollFx(path) {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const animated = document.querySelectorAll(
-      ".section-top, .section-heading, .benefits-head, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-cta"
+      ".section-top, .section-heading, .benefits-head, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-cta, .page-hero, .feed-card"
     );
     animated.forEach((element, index) => {
       element.dataset.animate = "reveal";
@@ -618,22 +748,38 @@ function App() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
+  }, [path]);
+}
+
+function App() {
+  const [path, setPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const onChange = () => setPath(window.location.pathname);
+    window.addEventListener("route-change", onChange);
+    window.addEventListener("popstate", onChange);
+    return () => {
+      window.removeEventListener("route-change", onChange);
+      window.removeEventListener("popstate", onChange);
+    };
   }, []);
+
+  useScrollFx(path);
+
+  const current = path.replace(/\/$/, "") || "/";
+  let page;
+  if (current === "/work") {
+    page = <WorkPage />;
+  } else if (current === "/feed") {
+    page = <FeedPage />;
+  } else {
+    page = <HomePage />;
+  }
 
   return (
     <>
-      <Header />
-      <main>
-        <Hero />
-        <ValueSection />
-        <ServicesSection />
-        <WorkSection />
-        <CriativoMarquee />
-        <BenefitsSection />
-        <PlansSection />
-        <FaqSection />
-        <ContactSection />
-      </main>
+      <Header path={path} />
+      {page}
       <Footer />
       <CookieConsent />
       <ContactLightbox />
