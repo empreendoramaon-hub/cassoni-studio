@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ArrowUpRight, BadgeCheck, ChevronDown, Mail, Menu, Send, X } from "lucide-react";
-import { hasFirebaseConfig, saveLead } from "./firebase";
+import { ArrowUpRight, BadgeCheck, ChevronDown, Mail, Menu, Phone, X } from "lucide-react";
 import "./styles.css";
 
 const works = [
@@ -120,7 +119,7 @@ const plans = [
 const faqs = [
   {
     q: "Como funciona o pedido de um projeto?",
-    a: "Você escolhe um pacote ou envia um briefing pelo formulário de contato e o trabalho começa em poucos dias.",
+    a: "Você escolhe um pacote ou envia um briefing pelo contato e o trabalho começa em poucos dias.",
   },
   {
     q: "Como é a entrega dos projetos?",
@@ -142,6 +141,10 @@ const loopImages = [
   "/work/anuncios-02.webp",
 ];
 
+function openContact() {
+  window.dispatchEvent(new CustomEvent("open-contact"));
+}
+
 function SectionTop({ label, index }) {
   return (
     <div className="section-top">
@@ -161,14 +164,38 @@ function Header() {
         Cassoni Studio<span>®</span>
       </a>
       <nav className={open ? "nav-links open" : "nav-links"} aria-label="Navegação principal">
-        {nav.map((item) => (
-          <a key={item} href={`#${slug(item)}`} onClick={() => setOpen(false)}>
-            {item}
-          </a>
-        ))}
+        {nav.map((item) => {
+          if (item === "Contato") {
+            return (
+              <a
+                key={item}
+                href="#contato"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setOpen(false);
+                  openContact();
+                }}
+              >
+                {item}
+              </a>
+            );
+          }
+          return (
+            <a key={item} href={`#${slug(item)}`} onClick={() => setOpen(false)}>
+              {item}
+            </a>
+          );
+        })}
       </nav>
       <div className="header-right">
-        <a className="header-cta" href="#contato">
+        <a
+          className="header-cta"
+          href="#contato"
+          onClick={(event) => {
+            event.preventDefault();
+            openContact();
+          }}
+        >
           Orçar
         </a>
         <button className="icon-button menu-toggle" type="button" onClick={() => setOpen((value) => !value)} aria-label="Abrir menu">
@@ -321,9 +348,16 @@ function WorkModal({ work, onClose }) {
           <span>{work.year} / {work.type}</span>
           <h2 id="work-modal-title">{work.title}</h2>
           <p>{work.note}</p>
-          <a className="secondary-link" href="#contato" onClick={onClose}>
+          <button
+            className="secondary-link as-button"
+            type="button"
+            onClick={() => {
+              onClose();
+              openContact();
+            }}
+          >
             Quero algo assim <ArrowUpRight size={16} aria-hidden="true" />
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -395,9 +429,9 @@ function PlansSection() {
                 </li>
               ))}
             </ul>
-            <a className="plan-cta" href="#contato">
+            <button className="plan-cta" type="button" onClick={openContact}>
               Começar <ArrowUpRight size={15} aria-hidden="true" />
-            </a>
+            </button>
           </article>
         ))}
       </div>
@@ -412,7 +446,7 @@ function FaqSection() {
     <section className="section-band faq-section">
       <div className="faq-side">
         <SectionTop label="● Perguntas" index="06" />
-        <p className="faq-lede">As dúvidas mais comuns. Se faltar alguma, é só mandar no contato.</p>
+        <p className="faq-lede">As dúvidas mais comuns. Se faltar alguma, é só chamar no contato.</p>
       </div>
       <div className="faq-list">
         {faqs.map((faq, index) => (
@@ -430,110 +464,59 @@ function FaqSection() {
 }
 
 function ContactSection() {
-  const [status, setStatus] = useState("");
-  const [form, setForm] = useState({ name: "", email: "", project: "" });
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setStatus("Enviando...");
-
-    const payload = {
-      ...form,
-      source: "cassoni-studio-site",
-      createdAt: new Date().toISOString(),
-    };
-
-    if (hasFirebaseConfig) {
-      try {
-        await saveLead(payload);
-        setStatus("Recebido! Em breve a Cassoni Studio entra em contato.");
-        setForm({ name: "", email: "", project: "" });
-        return;
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    const subject = encodeURIComponent(`Novo projeto - ${form.name || "Cassoni Studio"}`);
-    const body = encodeURIComponent(`Nome: ${form.name}\nEmail: ${form.email}\nProjeto: ${form.project}`);
-    window.location.href = `mailto:contato@cassonistudio.com?subject=${subject}&body=${body}`;
-    setStatus("Abrindo seu e-mail para enviar o briefing.");
-  }
-
   return (
     <section className="section-band contact-section" id="contato">
-      <div className="contact-copy">
-        <SectionTop label="● Contato" index="07" />
+      <SectionTop label="● Contato" index="07" />
+      <div className="contact-cta">
         <h2>Vamos montar a próxima entrega da sua marca.</h2>
-        <p>
-          Envie um briefing curto e a gente responde em pouco tempo com os próximos passos.
-        </p>
-        <a className="mail-link" href="mailto:contato@cassonistudio.com">
-          <Mail size={18} aria-hidden="true" />
-          contato@cassonistudio.com
-        </a>
-      </div>
-      <form className="contact-form" onSubmit={handleSubmit}>
-        <label>
-          Nome
-          <input
-            required
-            value={form.name}
-            onChange={(event) => setForm({ ...form, name: event.target.value })}
-            name="name"
-            autoComplete="name"
-          />
-        </label>
-        <label>
-          E-mail
-          <input
-            required
-            type="email"
-            value={form.email}
-            onChange={(event) => setForm({ ...form, email: event.target.value })}
-            name="email"
-            autoComplete="email"
-          />
-        </label>
-        <label>
-          O que você precisa?
-          <textarea
-            required
-            rows="5"
-            value={form.project}
-            onChange={(event) => setForm({ ...form, project: event.target.value })}
-            name="project"
-          />
-        </label>
-        <button className="submit-button" type="submit">
-          Enviar briefing <Send size={17} aria-hidden="true" />
+        <p>Chama a gente no e-mail ou no WhatsApp e vamos conversar sobre o seu projeto.</p>
+        <button className="primary-link" type="button" onClick={openContact}>
+          Falar com a gente <ArrowUpRight size={16} aria-hidden="true" />
         </button>
-        <p className="form-status" role="status">{status}</p>
-      </form>
+      </div>
     </section>
   );
 }
 
-function CookieConsent() {
-  const [visible, setVisible] = useState(false);
+function ContactLightbox() {
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setVisible(localStorage.getItem("cassoni-cookie-consent") !== "accepted");
+    const handler = () => setOpen(true);
+    window.addEventListener("open-contact", handler);
+    return () => window.removeEventListener("open-contact", handler);
   }, []);
 
-  function accept() {
-    localStorage.setItem("cassoni-cookie-consent", "accepted");
-    setVisible(false);
-  }
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
 
-  if (!visible) return null;
+  if (!open) return null;
 
   return (
-    <div className="cookie-pill" role="dialog" aria-label="Aviso de cookies">
-      <p>Este site usa cookies</p>
-      <button type="button" className="cookie-accept" onClick={accept}>
-        Aceitar
-      </button>
+    <div className="contact-lightbox-backdrop" role="dialog" aria-modal="true" aria-label="Contato" onClick={() => setOpen(false)}>
+      <div className="contact-lightbox" onClick={(event) => event.stopPropagation()}>
+        <button className="icon-button modal-close" type="button" onClick={() => setOpen(false)} aria-label="Fechar">
+          <X size={20} aria-hidden="true" />
+        </button>
+        <span className="lightbox-kicker">● Contato</span>
+        <h2>Vamos conversar</h2>
+        <div className="lightbox-links">
+          <a href="mailto:gabrielcassoni@gmail.com">
+            <Mail size={20} aria-hidden="true" />
+            gabrielcassoni@gmail.com
+          </a>
+          <a href="https://wa.me/5548996454906" target="_blank" rel="noreferrer">
+            <Phone size={20} aria-hidden="true" />
+            +55 48 99645-4906
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
@@ -559,7 +542,7 @@ function App() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const animated = document.querySelectorAll(
-      ".section-top, .section-heading, .benefits-head, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-copy, .contact-form"
+      ".section-top, .section-heading, .benefits-head, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-cta"
     );
     animated.forEach((element, index) => {
       element.dataset.animate = "reveal";
@@ -653,7 +636,32 @@ function App() {
       </main>
       <Footer />
       <CookieConsent />
+      <ContactLightbox />
     </>
+  );
+}
+
+function CookieConsent() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    setVisible(localStorage.getItem("cassoni-cookie-consent") !== "accepted");
+  }, []);
+
+  function accept() {
+    localStorage.setItem("cassoni-cookie-consent", "accepted");
+    setVisible(false);
+  }
+
+  if (!visible) return null;
+
+  return (
+    <div className="cookie-pill" role="dialog" aria-label="Aviso de cookies">
+      <p>Este site usa cookies</p>
+      <button type="button" className="cookie-accept" onClick={accept}>
+        Aceitar
+      </button>
+    </div>
   );
 }
 

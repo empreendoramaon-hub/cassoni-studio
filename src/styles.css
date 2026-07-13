@@ -186,6 +186,16 @@ img {
   padding-bottom: 2px;
 }
 
+button.secondary-link,
+.as-button {
+  font: inherit;
+  color: var(--ink);
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background: transparent;
+  cursor: pointer;
+}
+
 .secondary-link:hover,
 .mail-link:hover {
   color: var(--accent);
@@ -853,9 +863,14 @@ img {
   gap: 6px;
   width: fit-content;
   margin-top: 6px;
+  font: inherit;
   font-weight: 700;
+  color: var(--ink);
+  border: 0;
   border-bottom: 2px solid var(--ink);
   padding-bottom: 2px;
+  background: transparent;
+  cursor: pointer;
   transition: color 180ms ease, border-color 180ms ease;
 }
 
@@ -936,68 +951,96 @@ img {
 
 /* ---------- Contact ---------- */
 .contact-section {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.72fr);
-  gap: clamp(26px, 6vw, 90px);
   background: var(--paper-soft);
 }
 
-.contact-copy {
+.contact-cta {
   display: grid;
-  align-content: start;
-  gap: 20px;
+  gap: 24px;
+  max-width: 900px;
 }
 
-.contact-copy .section-top {
-  margin-bottom: 6px;
+.contact-cta h2 {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
 }
 
-.mail-link {
-  display: inline-flex;
+.contact-cta p {
+  margin: 0;
+  max-width: 560px;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  line-height: 1.45;
+}
+
+.contact-cta .primary-link {
   width: fit-content;
-  align-items: center;
-  gap: 9px;
-  font-weight: 600;
-  border-bottom: 1px solid var(--ink);
-  padding-bottom: 2px;
+  margin-top: 6px;
 }
 
-.contact-form {
+/* ---------- Contact lightbox ---------- */
+.contact-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
   display: grid;
-  gap: 16px;
-  padding: 24px;
+  place-items: center;
+  padding: clamp(16px, 4vw, 40px);
+  background: rgba(22, 22, 15, 0.72);
+  animation: cookie-enter 220ms ease both;
+}
+
+.contact-lightbox {
+  position: relative;
+  width: min(520px, 100%);
+  padding: clamp(30px, 5vw, 48px);
+  background: var(--paper);
   border: 1px solid var(--ink);
-  background: var(--white);
+  box-shadow: 14px 14px 0 var(--ink);
+  display: grid;
+  gap: 22px;
+  animation: hero-rise 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.contact-form label {
-  display: grid;
-  gap: 7px;
+.lightbox-kicker {
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
 }
 
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  border: 1px solid var(--ink);
-  background: var(--paper);
-  color: var(--ink);
-  padding: 13px 12px;
-  outline: 0;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(200, 51, 31, 0.16);
-}
-
-.form-status {
-  min-height: 24px;
+.contact-lightbox h2 {
   margin: 0;
-  color: var(--muted);
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.lightbox-links {
+  display: grid;
+  gap: 16px;
+}
+
+.lightbox-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  font-size: 1.15rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 8px;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.lightbox-links a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ---------- Cookie pill ---------- */
