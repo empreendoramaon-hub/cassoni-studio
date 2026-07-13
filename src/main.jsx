@@ -63,8 +63,8 @@ const services = [
   },
   {
     name: "Tecnologia",
-    text: "Sites rápidos, landing pages, integrações e automações com base pronta para Git, Vercel e Firebase.",
-    items: ["Sites Vercel", "Firebase", "Analytics", "Automação"],
+    text: "Sites rápidos, landing pages, integrações e automações prontas para escalar junto com a sua marca.",
+    items: ["Sites rápidos", "Landing pages", "Analytics", "Automação"],
   },
 ];
 
@@ -113,7 +113,7 @@ const plans = [
     name: "Site + Marca",
     price: "Pacote completo",
     description: "Para transformar posicionamento, identidade e presença digital em uma base única.",
-    features: ["Identidade completa", "Website", "Copy base", "Setup Vercel/Firebase"],
+    features: ["Identidade completa", "Website", "Copy base", "Setup e publicação"],
   },
 ];
 
@@ -128,11 +128,11 @@ const faqs = [
   },
   {
     q: "O site já fica pronto para publicar?",
-    a: "Sim. A estrutura usa Vite, tem build estático e inclui um vercel.json com o diretório de saída configurado.",
+    a: "Sim. Entregamos o site pronto para ir ao ar, rápido, otimizado e fácil de manter.",
   },
   {
-    q: "Onde entra o Firebase?",
-    a: "O formulário de contato tenta salvar leads no Firestore quando as variáveis VITE_FIREBASE_* estiverem configuradas.",
+    q: "Vocês cuidam da publicação?",
+    a: "Sim. Além de construir, orientamos e ajudamos a colocar tudo no ar, sem dor de cabeça.",
   },
 ];
 
@@ -209,14 +209,14 @@ function Hero() {
           <span>Campaign design</span>
           <span>Landing pages</span>
           <span>Social media</span>
-          <span>Vercel</span>
-          <span>Firebase</span>
+          <span>Branding</span>
+          <span>Websites</span>
           <span>Brand strategy</span>
           <span>Campaign design</span>
           <span>Landing pages</span>
           <span>Social media</span>
-          <span>Vercel</span>
-          <span>Firebase</span>
+          <span>Branding</span>
+          <span>Websites</span>
         </div>
       </div>
     </>
@@ -285,7 +285,7 @@ function WorkSection() {
         {works.map((work, index) => (
           <article className="work-item" key={work.title}>
             <button className="work-media" type="button" onClick={() => setSelectedWork(work)} aria-label={`Visualizar ${work.title}`}>
-              <img src={work.image} alt={work.title} loading="lazy" data-parallax="0.08" />
+              <img src={work.image} alt={work.title} loading="lazy" data-anim="1" data-py="0.07" data-px="0.03" data-zoom="0.12" />
               <span className="view-label">Ver case</span>
             </button>
             <div className="work-copy">
@@ -331,29 +331,21 @@ function WorkModal({ work, onClose }) {
 }
 
 function CriativoMarquee() {
-  const unit = loopImages.map((img, index) => (
-    <React.Fragment key={index}>
-      <span className="criativo-word">Criativo</span>
-      <div className="criativo-cell">
-        <img src={img} alt="" loading="lazy" />
-      </div>
-    </React.Fragment>
-  ));
+  const buildGroup = (prefix) =>
+    loopImages.map((img, index) => (
+      <React.Fragment key={`${prefix}-${index}`}>
+        <span className="criativo-word">Criativo</span>
+        <div className="criativo-cell">
+          <img src={img} alt="" loading="lazy" data-anim="1" data-zoom="0.16" />
+        </div>
+      </React.Fragment>
+    ));
 
   return (
     <section className="criativo-section" aria-hidden="true">
       <div className="criativo-track">
-        <div className="criativo-group">{unit}</div>
-        <div className="criativo-group">
-          {loopImages.map((img, index) => (
-            <React.Fragment key={`b-${index}`}>
-              <span className="criativo-word">Criativo</span>
-              <div className="criativo-cell">
-                <img src={img} alt="" loading="lazy" />
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
+        <div className="criativo-group">{buildGroup("a")}</div>
+        <div className="criativo-group">{buildGroup("b")}</div>
       </div>
     </section>
   );
@@ -454,7 +446,7 @@ function ContactSection() {
     if (hasFirebaseConfig) {
       try {
         await saveLead(payload);
-        setStatus("Recebido. A Cassoni Studio pode responder esse lead pelo Firebase.");
+        setStatus("Recebido! Em breve a Cassoni Studio entra em contato.");
         setForm({ name: "", email: "", project: "" });
         return;
       } catch (error) {
@@ -465,7 +457,7 @@ function ContactSection() {
     const subject = encodeURIComponent(`Novo projeto - ${form.name || "Cassoni Studio"}`);
     const body = encodeURIComponent(`Nome: ${form.name}\nEmail: ${form.email}\nProjeto: ${form.project}`);
     window.location.href = `mailto:contato@cassonistudio.com?subject=${subject}&body=${body}`;
-    setStatus("Abrindo seu e-mail. Configure o Firebase para gravar leads automaticamente.");
+    setStatus("Abrindo seu e-mail para enviar o briefing.");
   }
 
   return (
@@ -474,7 +466,7 @@ function ContactSection() {
         <SectionTop label="● Contato" index="07" />
         <h2>Vamos montar a próxima entrega da sua marca.</h2>
         <p>
-          Envie um briefing curto. O site já está preparado para salvar leads no Firestore e publicar na Vercel.
+          Envie um briefing curto e a gente responde em pouco tempo com os próximos passos.
         </p>
         <a className="mail-link" href="mailto:contato@cassonistudio.com">
           <Mail size={18} aria-hidden="true" />
@@ -566,7 +558,6 @@ function App() {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Scroll reveal
     const animated = document.querySelectorAll(
       ".section-top, .section-heading, .benefits-head, .value-card, .work-item, .service-row, .benefit-item, .plan-card, .faq-item, .contact-copy, .contact-form"
     );
@@ -593,14 +584,14 @@ function App() {
       animated.forEach((element) => revealObserver.observe(element));
     }
 
-    // Header theme over dark sections
     const header = document.querySelector(".site-header");
     const darkSections = Array.from(document.querySelectorAll(".is-dark-bg"));
-    const parallaxEls = Array.from(document.querySelectorAll("[data-parallax]"));
+    const animItems = Array.from(document.querySelectorAll("[data-anim]"));
 
     let ticking = false;
     const update = () => {
       ticking = false;
+
       const line = 34;
       let dark = false;
       for (const section of darkSections) {
@@ -614,12 +605,16 @@ function App() {
 
       if (!reduce) {
         const vh = window.innerHeight;
-        for (const element of parallaxEls) {
-          const speed = parseFloat(element.dataset.parallax) || 0.1;
+        for (const element of animItems) {
           const rect = element.getBoundingClientRect();
-          const center = rect.top + rect.height / 2;
-          const offset = (center - vh / 2) * speed;
-          element.style.setProperty("--py", `${(-offset).toFixed(1)}px`);
+          const progress = (rect.top + rect.height / 2 - vh / 2) / vh;
+          const py = (parseFloat(element.dataset.py) || 0) * progress * 100;
+          const px = (parseFloat(element.dataset.px) || 0) * progress * 100;
+          const zoom = parseFloat(element.dataset.zoom) || 0;
+          const zs = 1 + zoom * Math.max(0, 1 - Math.min(Math.abs(progress), 1));
+          element.style.setProperty("--px", `${px.toFixed(1)}px`);
+          element.style.setProperty("--py", `${py.toFixed(1)}px`);
+          element.style.setProperty("--zs", zs.toFixed(3));
         }
       }
     };

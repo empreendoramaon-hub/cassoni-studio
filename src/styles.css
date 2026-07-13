@@ -325,14 +325,14 @@ img {
 /* ---------- Reveal ---------- */
 [data-animate="reveal"] {
   opacity: 0;
-  transform: translateY(46px);
-  transition: opacity 720ms ease, transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(52px) scale(0.955);
+  transition: opacity 760ms ease, transform 760ms cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
 [data-animate="reveal"].is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 /* ---------- Headings ---------- */
@@ -435,19 +435,19 @@ img {
 
 .work-media img {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: -10%;
-  height: 120%;
-  width: 100%;
+  left: -8%;
+  right: -8%;
+  top: -14%;
+  height: 128%;
+  width: 116%;
   object-fit: cover;
-  transform: translateY(var(--py, 0)) scale(var(--sc, 1));
-  transition: transform 260ms ease;
+  transform: translate(var(--px, 0), var(--py, 0)) scale(var(--zs, 1));
+  transition: transform 140ms linear;
   will-change: transform;
 }
 
-.work-media:hover {
-  --sc: 1.05;
+.work-media:hover img {
+  filter: brightness(1.03);
 }
 
 .work-item:hover .work-media {
@@ -631,6 +631,9 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(var(--zs, 1));
+  transition: transform 160ms linear;
+  will-change: transform;
 }
 
 .criativo-cell::after {
@@ -1066,11 +1069,11 @@ img {
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(34px);
+    transform: translateY(40px) scale(0.965);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
