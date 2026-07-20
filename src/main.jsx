@@ -297,6 +297,35 @@ function Hero() {
   );
 }
 
+function ShowcaseSection() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive((value) => (value + 1) % works.length);
+    }, 2600);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section className="showcase" aria-label="Projetos recentes em destaque">
+      <span className="showcase-word showcase-word-top">Trabalhos</span>
+      <div className="showcase-frame" data-anim="1" data-zoom="0.22">
+        {works.map((work, index) => (
+          <img
+            key={work.title}
+            src={work.image}
+            alt={work.title}
+            loading="lazy"
+            className={index === active ? "active" : ""}
+          />
+        ))}
+      </div>
+      <span className="showcase-word showcase-word-bottom">Recentes</span>
+    </section>
+  );
+}
+
 function ValueSection() {
   return (
     <section className="section-band value-section">
@@ -603,6 +632,7 @@ function HomePage() {
   return (
     <main>
       <Hero />
+      <ShowcaseSection />
       <ValueSection />
       <ServicesSection />
       <WorkSection />

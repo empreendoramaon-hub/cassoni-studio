@@ -1,13 +1,13 @@
 :root {
-  --ink: #16160f;
-  --paper: #e6e6de;
-  --paper-soft: #dcddd1;
-  --line: rgba(22, 22, 15, 0.16);
-  --muted: #57564c;
+  --ink: #1e1e1e;
+  --paper: #e5e7df;
+  --paper-soft: #dcdeD1;
+  --line: rgba(30, 30, 30, 0.16);
+  --muted: #6f716b;
   --white: #ffffff;
   --accent: #c8331f;
   --sand: #c1a07d;
-  font-family: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Switzer", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background: var(--paper);
   font-synthesis: none;
@@ -46,8 +46,8 @@ img {
 }
 
 .display {
-  font-family: "Hanken Grotesk", sans-serif;
-  font-weight: 800;
+  font-family: "Switzer", sans-serif;
+  font-weight: 900;
 }
 
 /* ---------- Header ---------- */
@@ -363,10 +363,10 @@ button.secondary-link,
 .contact-copy h2,
 .benefits-head h2 {
   margin: 0;
-  font-weight: 800;
+  font-weight: 500;
   font-size: clamp(2rem, 5vw, 5rem);
   line-height: 1.02;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
 }
 
 .section-heading p,
@@ -377,6 +377,76 @@ button.secondary-link,
   color: var(--muted);
   font-size: clamp(1rem, 1.3vw, 1.25rem);
   line-height: 1.45;
+}
+
+/* ---------- Showcase (giant text + growing image) ---------- */
+.showcase {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(20px, 4vw, 40px) clamp(18px, 4vw, 48px) clamp(60px, 9vw, 120px);
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+}
+
+.showcase-word {
+  display: block;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 12.5vw, 12.5rem);
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+}
+
+.showcase-word-top {
+  position: relative;
+  z-index: 1;
+}
+
+.showcase-word-bottom {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(-2.4rem, -4vw, -1.2rem);
+}
+
+.showcase-frame {
+  position: relative;
+  z-index: 2;
+  width: clamp(220px, 32vw, 560px);
+  aspect-ratio: 4 / 3;
+  margin: clamp(-4rem, -7vw, -2.4rem) auto clamp(-1.6rem, -3vw, -0.6rem);
+  overflow: hidden;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  box-shadow: 14px 14px 0 var(--ink);
+  transform: scale(var(--zs, 1));
+  transition: transform 160ms linear;
+  will-change: transform;
+}
+
+.showcase-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.08);
+  transition: opacity 900ms ease, transform 2.6s ease;
+}
+
+.showcase-frame img.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (max-width: 640px) {
+  .showcase-word {
+    font-size: clamp(2.4rem, 17vw, 4.5rem);
+  }
+
+  .showcase-frame {
+    width: clamp(160px, 58vw, 320px);
+  }
 }
 
 /* ---------- Value trio ---------- */
@@ -398,10 +468,10 @@ button.secondary-link,
 
 .value-card h3 {
   margin: 0 0 14px;
-  font-weight: 800;
+  font-weight: 600;
   font-size: clamp(1.4rem, 2.6vw, 2rem);
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .value-card p {
@@ -541,10 +611,10 @@ button.secondary-link,
 
 .work-modal-copy h2 {
   margin: 0;
-  font-weight: 800;
+  font-weight: 500;
   font-size: clamp(2rem, 4vw, 3.4rem);
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .work-modal-copy p {
@@ -568,10 +638,10 @@ button.secondary-link,
 .work-copy h3 {
   margin: 0;
   max-width: 760px;
-  font-weight: 800;
+  font-weight: 500;
   font-size: clamp(1.7rem, 3.6vw, 3.2rem);
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .work-copy p {
@@ -713,10 +783,10 @@ button.secondary-link,
 .service-row h3,
 .plan-card h3 {
   margin: 0 0 10px;
-  font-weight: 800;
+  font-weight: 600;
   font-size: clamp(1.4rem, 2.6vw, 1.9rem);
   line-height: 1.04;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .service-row ul,
@@ -823,10 +893,10 @@ button.secondary-link,
 }
 
 .plan-card strong {
-  font-weight: 800;
+  font-weight: 600;
   font-size: clamp(1.4rem, 2.4vw, 2rem);
   line-height: 1.04;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .plan-card p {
@@ -962,10 +1032,10 @@ button.secondary-link,
 
 .contact-cta h2 {
   margin: 0;
-  font-weight: 800;
+  font-weight: 500;
   font-size: clamp(2rem, 5vw, 5rem);
   line-height: 1.02;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
 }
 
 .contact-cta p {
