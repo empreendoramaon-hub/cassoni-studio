@@ -269,13 +269,9 @@ function Hero() {
           Criativo premium a preços enxutos para marcas em crescimento. Empacotado como assinatura ou projetos fechados.
         </h1>
       </section>
-      <div className="hero-marquee" aria-hidden="true">
-        <div className="hero-marquee-track">
-          <span>Cassoni Studio</span>
-          <span>Cassoni Studio</span>
-          <span>Cassoni Studio</span>
-          <span>Cassoni Studio</span>
-        </div>
+      <div className="hero-giant" aria-hidden="true">
+        <span className="hero-giant-word" data-grow="0.5">Cassoni</span>
+        <span className="hero-giant-word" data-grow="0.5">Studio</span>
       </div>
       <div className="motion-marquee" aria-hidden="true">
         <div className="marquee-track">
@@ -309,19 +305,22 @@ function ShowcaseSection() {
 
   return (
     <section className="showcase" aria-label="Projetos recentes em destaque">
-      <span className="showcase-word showcase-word-top">Trabalhos</span>
-      <div className="showcase-frame" data-anim="1" data-zoom="0.22">
-        {works.map((work, index) => (
-          <img
-            key={work.title}
-            src={work.image}
-            alt={work.title}
-            loading="lazy"
-            className={index === active ? "active" : ""}
-          />
-        ))}
+      <span className="showcase-line">Trabalhos</span>
+      <div className="showcase-line showcase-split">
+        <span className="showcase-part">Re</span>
+        <div className="showcase-frame" data-anim="1" data-zoom="0.35">
+          {works.map((work, index) => (
+            <img
+              key={work.title}
+              src={work.image}
+              alt={work.title}
+              loading="lazy"
+              className={index === active ? "active" : ""}
+            />
+          ))}
+        </div>
+        <span className="showcase-part">centes</span>
       </div>
-      <span className="showcase-word showcase-word-bottom">Recentes</span>
     </section>
   );
 }
@@ -730,6 +729,7 @@ function useScrollFx(path) {
     const header = document.querySelector(".site-header");
     const darkSections = Array.from(document.querySelectorAll(".is-dark-bg"));
     const animItems = Array.from(document.querySelectorAll("[data-anim]"));
+    const growItems = Array.from(document.querySelectorAll("[data-grow]"));
 
     let ticking = false;
     const update = () => {
@@ -748,6 +748,14 @@ function useScrollFx(path) {
 
       if (!reduce) {
         const vh = window.innerHeight;
+
+        for (const element of growItems) {
+          const grow = parseFloat(element.dataset.grow) || 0;
+          const start = element.getBoundingClientRect().top + window.scrollY - vh;
+          const progress = Math.min(Math.max((window.scrollY - start) / vh, 0), 1);
+          element.style.setProperty("--gs", (1 + grow * progress).toFixed(3));
+        }
+
         for (const element of animItems) {
           const rect = element.getBoundingClientRect();
           const progress = (rect.top + rect.height / 2 - vh / 2) / vh;
